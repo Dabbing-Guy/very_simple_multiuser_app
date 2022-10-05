@@ -56,7 +56,7 @@ def users():
         del all_users[request.json["user_id"]]
         return jsonify({"status": "success"}), 200 
 
-@app.route("/message/<int:user_id>", methods=["GET", "POST"])
+@app.route("/message/<int:user_id>", methods=["GET", "PATCH"])
 def message(user_id = None):
     global all_users
 
@@ -67,7 +67,7 @@ def message(user_id = None):
 
     if request.method == "GET":
         return jsonify({"message": all_users[user_id].message}), 200
-    if request.method == "POST":
+    if request.method == "PATCH":
         if request.json["user_password"] is None:
             return jsonify({"error": "No password provided."}), 400
         if int(request.json["user_password"]) != all_users[user_id].user_password:

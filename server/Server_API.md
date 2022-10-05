@@ -18,6 +18,6 @@ Removes the specifed user. Requires a json body with `user_password` and `user_i
 
 This will return json with `message` set as a string.
 
-## Post
+## Patch
 
 Takes json with `user_password` (int) and `message` (str of max len 50). Changes the user's message. 
