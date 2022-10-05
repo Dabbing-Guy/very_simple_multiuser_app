@@ -4,24 +4,24 @@ import random
 app = Flask(__name__)
 
 class User:
-    def __init__(self, user_id: int, user_password: int, user_nickname: str, icon: str):
+    def __init__(self, user_id: int, user_password: int, user_nickname: str, message: str):
         self.user_id: int = user_id
         self.user_password: int = user_password
         self.user_nickname: str = user_nickname
-        self.icon: str = icon
+        self.message: str = message
 
     def full_dict(self) -> dict:
         return {
             "user_id": self.user_id,
             "user_password": self.user_password,
             "user_nickname": self.user_nickname,
-            "icon": self.icon
+            "message": self.message
         }
     def safe_dict(self) -> dict:
         return {
             "user_id": self.user_id,
             "user_nickname": self.user_nickname,
-            "icon": self.icon
+            "message": self.message
         }
 
 all_users: dict[int, User] = {}
@@ -40,12 +40,12 @@ def users():
         user_nickname = request.json['user_nickname']
         if len(user_nickname) > 25:
             return jsonify({"error": "Nickname too long"}), 400
-        if request.json["icon"] is None:
-            return jsonify({"error": "No icon provided."}), 400
-        if len(request.json["icon"]) != 1:
-            return jsonify({"error": "Length of icon is invalid."}), 400
-        icon = request.json['icon']
-        user = User(user_id, user_password, user_nickname, icon)
+        if request.json["message"] is None:
+            return jsonify({"error": "No message provided."}), 400
+        if len(request.json["message"]) > 50:
+            return jsonify({"error": "Length of message is invalid."}), 400
+        message = request.json['message']
+        user = User(user_id, user_password, user_nickname, message)
         all_users[user_id] = user
         return jsonify(user.full_dict())
     elif request.method == "DELETE":
@@ -54,9 +54,10 @@ def users():
         if request.json["user_password"] != all_users[user_id].user_password:
             return jsonify({"error": "Wrong password."}), 400
         del all_users[request.json["user_id"]]
+        return jsonify({"status": "success"}), 200 
 
-@app.route("/icon/<int:user_id>", methods=["GET", "POST"])
-def icon(user_id = None):
+@app.route("/message/<int:user_id>", methods=["GET", "POST"])
+def message(user_id = None):
     global all_users
 
     if user_id is None:
@@ -65,15 +66,15 @@ def icon(user_id = None):
         return jsonify({"error": "User ID does not exist."}), 400
 
     if request.method == "GET":
-        return jsonify({"icon": all_users[user_id].icon}), 200
+        return jsonify({"message": all_users[user_id].message}), 200
     if request.method == "POST":
         if request.json["user_password"] is None:
             return jsonify({"error": "No password provided."}), 400
-        if request.json["user_password"] != all_users[user_id].user_password:
+        if int(request.json["user_password"]) != all_users[user_id].user_password:
             return jsonify({"error": "Wrong password."}), 400
-        if request.json["icon"] is None:
-            return jsonify({"error": "No icon provided."}), 400
-        if len(request.json["icon"]) != 1:
-            return jsonify({"error": "Length of icon is invalid."}), 400
-        all_users[user_id].icon = request.json["icon"]
+        if request.json["message"] is None:
+            return jsonify({"error": "No message provided."}), 400
+        if len(request.json["message"]) > 50:
+            return jsonify({"error": "Length of message is invalid."}), 400
+        all_users[user_id].message = request.json["message"]
         return jsonify({"status": "success"}), 200
