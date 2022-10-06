@@ -25,17 +25,17 @@ class User:
         }
 
 all_users: dict[int, User] = {}
-user_id = 0
+next_user_id = 0
 
 @app.route('/users', methods=['GET', "POST", "DELETE"])
 def users():
     global all_users
-    global user_id
+    global next_user_id
 
     if request.method == 'GET':
         return jsonify({"users": [user.safe_dict() for user in all_users.values()]})
     elif request.method == 'POST':
-        user_id += 1
+        next_user_id += 1
         user_password = random.randint(1, 999999)
         user_nickname = request.json['user_nickname']
         if len(user_nickname) > 25:
@@ -45,13 +45,13 @@ def users():
         if len(request.json["message"]) > 50:
             return jsonify({"error": "Length of message is invalid."}), 400
         message = request.json['message']
-        user = User(user_id, user_password, user_nickname, message)
-        all_users[user_id] = user
+        user = User(next_user_id, user_password, user_nickname, message)
+        all_users[next_user_id] = user
         return jsonify(user.full_dict())
     elif request.method == "DELETE":
         if request.json["user_password"] is None:
             return jsonify({"error": "No password provided."}), 400
-        if request.json["user_password"] != all_users[user_id].user_password:
+        if request.json["user_password"] != all_users[request.json["user_id"]].user_password:
             return jsonify({"error": "Wrong password."}), 400
         del all_users[request.json["user_id"]]
         return jsonify({"status": "success"}), 200 
