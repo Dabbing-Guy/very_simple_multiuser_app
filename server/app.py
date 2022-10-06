@@ -3,6 +3,9 @@ import random
 
 app = Flask(__name__)
 
+MAX_MESSAGE_LENGTH: int = 250
+MAX_NICKNAME_LENGTH: int = 25
+
 class User:
     def __init__(self, user_id: int, user_password: int, user_nickname: str, message: str):
         self.user_id: int = user_id
@@ -38,11 +41,11 @@ def users():
         next_user_id += 1
         user_password = random.randint(1, 999999)
         user_nickname = request.json['user_nickname']
-        if len(user_nickname) > 25:
+        if len(user_nickname) > MAX_NICKNAME_LENGTH:
             return jsonify({"error": "Nickname too long"}), 400
         if request.json["message"] is None:
             return jsonify({"error": "No message provided."}), 400
-        if len(request.json["message"]) > 50:
+        if len(request.json["message"]) > MAX_MESSAGE_LENGTH:
             return jsonify({"error": "Length of message is invalid."}), 400
         message = request.json['message']
         user = User(next_user_id, user_password, user_nickname, message)
@@ -74,7 +77,7 @@ def message(user_id = None):
             return jsonify({"error": "Wrong password."}), 400
         if request.json["message"] is None:
             return jsonify({"error": "No message provided."}), 400
-        if len(request.json["message"]) > 50:
+        if len(request.json["message"]) > MAX_MESSAGE_LENGTH:
             return jsonify({"error": "Length of message is invalid."}), 400
         all_users[user_id].message = request.json["message"]
         return jsonify({"status": "success"}), 200
