@@ -66,10 +66,10 @@ def main(stdscr: curses.window):
                 if messagescr_y == len(all_users) - (curses.LINES - 1): continue
                 messagescr_y += 1
                 continue
-            if next_ch == curses.KEY_BACKSPACE:
+            if next_ch == curses.KEY_BACKSPACE or next_ch == 127:
                 message = message[:-1]
                 continue
-            if next_ch == ord("\n"):
+            if next_ch == ord("\n") or next_ch == curses.KEY_ENTER:
                 if message == "exit":
                     clean_exit(us)
                 # Send message to server
