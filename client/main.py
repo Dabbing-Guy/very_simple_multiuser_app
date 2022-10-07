@@ -7,7 +7,7 @@ except ImportError:
 from typing import NoReturn
 import requests
 
-URL: str = "http://very-simple-multiuser-app-api.tk/"
+URL: str = "https://very-simple-multiuser-app-api.tk/"
 MESSAGESCR_COLS: int = 25 + 250 + 3
 
 def clean_exit(us: dict, exception: Exception = None) -> NoReturn:
