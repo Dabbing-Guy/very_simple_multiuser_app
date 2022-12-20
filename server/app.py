@@ -1,13 +1,18 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 import random
 
 app = Flask(__name__)
+CORS(app)
 
 MAX_MESSAGE_LENGTH: int = 250
 MAX_NICKNAME_LENGTH: int = 25
 
+
 class User:
-    def __init__(self, user_id: int, user_password: int, user_nickname: str, message: str):
+
+    def __init__(self, user_id: int, user_password: int, user_nickname: str,
+                 message: str):
         self.user_id: int = user_id
         self.user_password: int = user_password
         self.user_nickname: str = user_nickname
@@ -20,6 +25,7 @@ class User:
             "user_nickname": self.user_nickname,
             "message": self.message
         }
+
     def safe_dict(self) -> dict:
         return {
             "user_id": self.user_id,
@@ -27,8 +33,10 @@ class User:
             "message": self.message
         }
 
+
 all_users: dict[int, User] = {}
 next_user_id = 0
+
 
 @app.route('/users', methods=['GET', "POST", "DELETE"])
 def users():
@@ -36,7 +44,8 @@ def users():
     global next_user_id
 
     if request.method == 'GET':
-        return jsonify({"users": [user.safe_dict() for user in all_users.values()]})
+        return jsonify(
+            {"users": [user.safe_dict() for user in all_users.values()]})
     elif request.method == 'POST':
         next_user_id += 1
         user_password = random.randint(1, 999999)
@@ -54,13 +63,15 @@ def users():
     elif request.method == "DELETE":
         if request.json["user_password"] is None:
             return jsonify({"error": "No password provided."}), 400
-        if request.json["user_password"] != all_users[request.json["user_id"]].user_password:
+        if request.json["user_password"] != all_users[
+                request.json["user_id"]].user_password:
             return jsonify({"error": "Wrong password."}), 400
         del all_users[request.json["user_id"]]
-        return jsonify({"status": "success"}), 200 
+        return jsonify({"status": "success"}), 200
+
 
 @app.route("/message/<int:user_id>", methods=["GET", "PATCH"])
-def message(user_id = None):
+def message(user_id=None):
     global all_users
 
     if user_id is None:
@@ -73,7 +84,8 @@ def message(user_id = None):
     if request.method == "PATCH":
         if request.json["user_password"] is None:
             return jsonify({"error": "No password provided."}), 400
-        if int(request.json["user_password"]) != all_users[user_id].user_password:
+        if int(request.json["user_password"]
+               ) != all_users[user_id].user_password:
             return jsonify({"error": "Wrong password."}), 400
         if request.json["message"] is None:
             return jsonify({"error": "No message provided."}), 400
