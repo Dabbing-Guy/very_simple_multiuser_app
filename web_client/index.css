@@ -1,0 +1,61 @@
+* {
+    font-family: 'Courier New', Courier, monospace;
+}
+
+#messages {
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 0 5px #ccc;
+    padding: 10px;
+    width: 60%;
+    margin: 0 auto;
+}
+
+#menuname {
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 0 5px #ccc;
+    padding: 10px;
+    width: 60%;
+    margin: 0 auto;
+}
+
+#prompt {
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 0 5px #ccc;
+    padding: 10px;
+    width: 60%;
+    margin: 0 auto;
+}
+
+#user_input {
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 0 5px #ccc;
+    padding: 10px;
+    width: 60%;
+    margin: 0 auto;
+    display: block;
+}
+
+#submit {
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 0 5px #ccc;
+    padding: 10px;
+    width: 61.6%;
+    margin: 0 auto;
+    display: block;
+}
+
+#title {
+    padding: 10px;
+    width: 60%;
+    margin: 0 auto;
+}
